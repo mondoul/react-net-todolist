@@ -1,0 +1,10 @@
+node_modules
+public/bundle.js
+.idea
+.idea
+packages/
+packages/
+*.suo
+bin/
+obj/
+*.user

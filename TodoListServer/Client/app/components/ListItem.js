@@ -12,7 +12,7 @@ class ListItem extends React.Component {
         return (
             <div className="list-item">
                 <span>{this.props.children}</span>
-                <input type="checkbox" checked={this.props.isComplete} onChange={this.handleItemStatus.bind(this)}/>
+                <input className="item-status" type="checkbox" checked={this.props.isComplete} onChange={this.handleItemStatus.bind(this)}/>
             </div>
         );
     }

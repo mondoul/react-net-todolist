@@ -49,7 +49,7 @@ namespace TodoListServer.Api
         public IHttpActionResult DeleteItem(int itemId)
         {
             GetRepository().DeleteItem(itemId);
-            return Ok();
+            return Ok("");
         }
 
     }

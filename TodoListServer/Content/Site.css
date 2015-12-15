@@ -5,57 +5,42 @@
     background-color: #fff;
 }
 
-header, footer, nav, section {
-    display: block;
+.list-container {
+    width: 400px;
+    border: 1px solid gray;
+    padding: 15px;
+    -ms-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
 }
 
-
-/* Styles for basic forms
------------------------------------------------------------*/
-fieldset {
-    border: 1px solid #ddd;
-    padding: 0 1.4em 1.4em 1.4em;
-    margin: 0 0 1.5em 0;
+.list-item {
+    padding-bottom: 10px;
+    padding-top: 5px;
+    border-bottom: 1px dashed lightgray;
 }
 
-legend {
-    font-size: 1.2em;
-    font-weight: bold;
+.list-item:last-child {
+    border-bottom: none;
 }
 
-textarea {
-    min-height: 75px;
+.delete-item, .item-status {
+    float: right;
 }
 
-.editor-label {
-    margin: 1em 0 0 0;
+.delete-item {
+    cursor: pointer;
+}
+.delete-item:hover {
+    text-decoration: underline;
 }
 
-.editor-field {
-    margin: 0.5em 0 0 0;
+.new-item-form {
+    margin-top: 15px;
 }
 
-
-/* Styles for validation helpers
------------------------------------------------------------*/
-.field-validation-error {
-    color: #f00;
-}
-
-.field-validation-valid {
-    display: none;
-}
-
-.input-validation-error {
-    border: 1px solid #f00;
-    background-color: #fee;
-}
-
-.validation-summary-errors {
-    font-weight: bold;
-    color: #f00;
-}
-
-.validation-summary-valid {
-    display: none;
+input.add-item {
+    margin-right: 15px;
+    width: 343px;
 }

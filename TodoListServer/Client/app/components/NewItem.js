@@ -27,7 +27,7 @@ class NewItem extends React.Component{
     render() {
         return (
             <form className="new-item-form" onSubmit={this.handleSubmit.bind(this)}>
-                <input type="text"
+                <input type="text" className="add-item"
                     placeholder="Type a new task here..."
                     value={this.state.content}
                     onChange={this.handleItemChange.bind(this)}

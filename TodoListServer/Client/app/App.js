@@ -3,6 +3,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
+import _ from 'underscore';
 import ListContainer  from './components/ListContainer';
 import NewItem from './components/NewItem';
 
@@ -35,7 +36,7 @@ class App extends React.Component {
             data: item
         }).done(function(data) {
             var items = this.state.data;
-            items.push(data);
+            items.push({Id: data.ID, Content: data.Content});
             this.setState({data : items});
         }.bind(this)).error(function(xhr, status, err) {
             console.error(this.props.url, status, err.toString());
@@ -62,11 +63,26 @@ class App extends React.Component {
 
     }
 
+    handleRemoveItem(itemId) {
+        $.ajax({
+            url:this.props.url + '/' + itemId,
+            dataType: 'json',
+            type: 'DELETE'
+        }).done(function(data) {
+            var state = _.reject(this.state.data, function(item) {
+                return item.Id === itemId;
+            });
+            this.setState({data : state});
+        }.bind(this)).error(function(xhr, status, err) {
+            console.error(this.props.url, status, err.toString());
+        }.bind(this));
+    }
+
     render() {
         return (
             <div className="container">
                 <h1>React Todo List</h1>
-                <ListContainer data={this.state.data} onUpdateItem={this.handleUpdateItem.bind(this)} />
+                <ListContainer data={this.state.data} onUpdateItem={this.handleUpdateItem.bind(this)} onRemoveItem={this.handleRemoveItem.bind(this)} />
                 <NewItem onItemAdd={this.handleItemAdd.bind(this)} />
             </div>
         );

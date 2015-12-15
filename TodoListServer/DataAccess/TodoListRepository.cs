@@ -51,7 +51,7 @@ namespace TodoListServer.DataAccess
                     return;
 
                 list.Items.Remove(item);
-                item.TodoList = null;
+                context.ListItems.Remove(item);
                 
                 context.SaveChanges();
             }

@@ -30,9 +30,9 @@ namespace TodoListServer.Api
 
         [HttpPost]
         [Route("")]
-        public IHttpActionResult CheckItem(string content)
+        public IHttpActionResult AddItem(ListItem newItem)
         {
-            var item = GetRepository().AddItem(content);
+            var item = GetRepository().AddItem(newItem.Content);
             return Ok(item);
         }
 

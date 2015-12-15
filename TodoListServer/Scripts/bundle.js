@@ -64,6 +64,10 @@
 
 	var _ListContainer2 = _interopRequireDefault(_ListContainer);
 
+	var _NewItem = __webpack_require__(162);
+
+	var _NewItem2 = _interopRequireDefault(_NewItem);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -99,6 +103,42 @@
 	            }).bind(this));
 	        }
 	    }, {
+	        key: 'handleItemAdd',
+	        value: function handleItemAdd(item) {
+	            _jquery2.default.ajax({
+	                url: this.props.url,
+	                dataType: 'json',
+	                type: 'POST',
+	                data: item
+	            }).done((function (data) {
+	                var items = this.state.data;
+	                items.push(data);
+	                this.setState({ data: items });
+	            }).bind(this)).error((function (xhr, status, err) {
+	                console.error(this.props.url, status, err.toString());
+	            }).bind(this));
+	        }
+	    }, {
+	        key: 'handleUpdateItem',
+	        value: function handleUpdateItem(itemId, isChecked) {
+	            _jquery2.default.ajax({
+	                url: this.props.url + '/' + itemId + '/' + isChecked,
+	                dataType: 'json',
+	                type: 'PUT'
+	            }).done((function (data) {
+	                var state = this.state.data.map(function (d) {
+	                    return {
+	                        Id: d.Id,
+	                        IsComplete: data.ID === d.Id ? data.IsComplete : d.IsComplete,
+	                        Content: d.Content
+	                    };
+	                });
+	                this.setState({ data: state });
+	            }).bind(this)).error((function (xhr, status, err) {
+	                console.error(this.props.url, status, err.toString());
+	            }).bind(this));
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
 	            return _react2.default.createElement(
@@ -109,7 +149,8 @@
 	                    null,
 	                    'React Todo List'
 	                ),
-	                _react2.default.createElement(_ListContainer2.default, { data: this.state.data })
+	                _react2.default.createElement(_ListContainer2.default, { data: this.state.data, onUpdateItem: this.handleUpdateItem.bind(this) }),
+	                _react2.default.createElement(_NewItem2.default, { onItemAdd: this.handleItemAdd.bind(this) })
 	            );
 	        }
 	    }]);
@@ -28960,15 +29001,20 @@
 	    }
 
 	    _createClass(ListContainer, [{
+	        key: 'updateItem',
+	        value: function updateItem(itemId, isChecked) {
+	            this.props.onUpdateItem(itemId, isChecked);
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var itemNodes = this.props.data.map(function (item) {
+	            var itemNodes = this.props.data.map((function (item) {
 	                return _react2.default.createElement(
 	                    _ListItem2.default,
-	                    { isComplete: item.IsComplete, key: item.Id },
+	                    { isComplete: item.IsComplete, key: item.Id, onItemStatusChange: this.updateItem.bind(this, item.Id) },
 	                    item.Content
 	                );
-	            });
+	            }).bind(this));
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'list-container' },
@@ -29016,6 +29062,11 @@
 	    }
 
 	    _createClass(ListItem, [{
+	        key: 'handleItemStatus',
+	        value: function handleItemStatus(e) {
+	            this.props.onItemStatusChange(e.target.checked);
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
 	            return _react2.default.createElement(
@@ -29026,7 +29077,7 @@
 	                    null,
 	                    this.props.children
 	                ),
-	                _react2.default.createElement('input', { type: 'checkbox', checked: this.props.isComplete })
+	                _react2.default.createElement('input', { type: 'checkbox', checked: this.props.isComplete, onChange: this.handleItemStatus.bind(this) })
 	            );
 	        }
 	    }]);
@@ -29035,6 +29086,81 @@
 	})(_react2.default.Component);
 
 	exports.default = ListItem;
+
+/***/ },
+/* 162 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var NewItem = (function (_React$Component) {
+	    _inherits(NewItem, _React$Component);
+
+	    function NewItem(props) {
+	        _classCallCheck(this, NewItem);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(NewItem).call(this, props));
+
+	        _this.state = { content: '' };
+	        return _this;
+	    }
+
+	    _createClass(NewItem, [{
+	        key: 'handleItemChange',
+	        value: function handleItemChange(e) {
+	            this.setState({ content: e.target.value });
+	        }
+	    }, {
+	        key: 'handleSubmit',
+	        value: function handleSubmit(e) {
+	            e.preventDefault();
+	            var content = this.state.content.trim();
+	            if (!content) {
+	                return;
+	            }
+
+	            this.props.onItemAdd({ Content: content });
+
+	            this.setState({ content: '' });
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'form',
+	                { className: 'new-item-form', onSubmit: this.handleSubmit.bind(this) },
+	                _react2.default.createElement('input', { type: 'text',
+	                    placeholder: 'Type a new task here...',
+	                    value: this.state.content,
+	                    onChange: this.handleItemChange.bind(this)
+	                }),
+	                _react2.default.createElement('input', { type: 'submit', value: 'Add Item' })
+	            );
+	        }
+	    }]);
+
+	    return NewItem;
+	})(_react2.default.Component);
+
+	exports.default = NewItem;
 
 /***/ }
 /******/ ]);

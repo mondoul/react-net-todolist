@@ -4,6 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import ListContainer  from './components/ListContainer';
+import NewItem from './components/NewItem';
 
 class App extends React.Component {
 
@@ -26,11 +27,47 @@ class App extends React.Component {
         }.bind(this));
     }
 
+    handleItemAdd(item) {
+        $.ajax({
+            url:this.props.url,
+            dataType: 'json',
+            type: 'POST',
+            data: item
+        }).done(function(data) {
+            var items = this.state.data;
+            items.push(data);
+            this.setState({data : items});
+        }.bind(this)).error(function(xhr, status, err) {
+            console.error(this.props.url, status, err.toString());
+        }.bind(this));
+    }
+
+    handleUpdateItem(itemId, isChecked){
+        $.ajax({
+            url:this.props.url + '/' + itemId + '/' + isChecked,
+            dataType: 'json',
+            type: 'PUT'
+        }).done(function(data) {
+            var state = this.state.data.map(function(d) {
+               return {
+                   Id: d.Id,
+                   IsComplete: (data.ID === d.Id ? data.IsComplete : d.IsComplete),
+                   Content: d.Content
+               };
+            });
+            this.setState({data : state});
+        }.bind(this)).error(function(xhr, status, err) {
+            console.error(this.props.url, status, err.toString());
+        }.bind(this));
+
+    }
+
     render() {
         return (
             <div className="container">
                 <h1>React Todo List</h1>
-                <ListContainer data={this.state.data} />
+                <ListContainer data={this.state.data} onUpdateItem={this.handleUpdateItem.bind(this)} />
+                <NewItem onItemAdd={this.handleItemAdd.bind(this)} />
             </div>
         );
     }
